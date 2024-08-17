@@ -1,8 +1,9 @@
 import * as alt from 'alt-client';
 import { Events } from '@Shared/events/index.js';
 import { useMessenger } from '../system/messenger.js';
+import { createNotification } from '../screen/notification.js';
 
-type InteractionCallback = (uid: string, pos: alt.Vector3) => void;
+type InteractionCallback = (message: string, uid: string, pos: alt.Vector3) => void;
 
 const messenger = useMessenger();
 const DEFAULT_COOLDOWN = 1000;
@@ -38,7 +39,7 @@ function handleKeyPress(key: alt.KeyCode) {
 
 function handleClear() {
     for (let cb of onLeaveCallbacks) {
-        cb(uid, pos);
+        cb(message, uid, pos);
     }
 
     uid = undefined;
@@ -49,22 +50,38 @@ function handleClear() {
 }
 
 function handleSet(_uid: string, _message: string | undefined, _pos: alt.Vector3) {
-    for (let cb of onEnterCallbacks) {
-        cb(uid, pos);
+    if (onEnterCallbacks.length <= 0) {
+        if (_message && _message.length >= 1) {
+            createNotification(_message);
+        }
+    } else {
+        for (let cb of onEnterCallbacks) {
+            cb(message, uid, pos);
+        }
     }
 
     uid = _uid;
-    message = _message;
+    message = _message ?? 'No Message Set';
     pos = _pos;
 
     alt.on('keyup', handleKeyPress);
 }
 
 export function useClientInteraction() {
+    /**
+     * Recieve a callback about the interaction when entered
+     *
+     * @param {InteractionCallback} cb
+     */
     function onEnter(cb: InteractionCallback) {
         onEnterCallbacks.push(cb);
     }
 
+    /**
+     * Recieve a callback about the interaction when left
+     *
+     * @param {InteractionCallback} cb
+     */
     function onLeave(cb: InteractionCallback) {
         onLeaveCallbacks.push(cb);
     }

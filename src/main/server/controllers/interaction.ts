@@ -1,6 +1,5 @@
 import * as alt from 'alt-server';
 import { Events } from '@Shared/events/index.js';
-import { useTranslate } from '@Shared/translate.js';
 import * as Utility from '@Shared/utility/index.js';
 
 export type InteractionCallback = (entity: alt.Player, colshape: alt.Colshape, uid: string) => void;
@@ -15,7 +14,6 @@ type InteractionInternal = {
 
 const SessionKey = 'colshape:uid';
 const interactions: Array<InteractionInternal> = [];
-const { t } = useTranslate('en');
 
 function getIndex(colshape: alt.Colshape): number {
     if (!colshape.valid) {
@@ -69,11 +67,13 @@ function onEnter(colshape: alt.Colshape, entity: alt.Entity) {
 function onLeave(colshape: alt.Colshape, entity: alt.Entity) {
     const index = getIndex(colshape);
     if (index <= -1) {
+        if (entity instanceof alt.Player) entity.emit(Events.controllers.interaction.clear);
         return;
     }
 
     const interaction = interactions[index];
     if (!isValid(entity, interaction)) {
+        if (entity instanceof alt.Player) entity.emit(Events.controllers.interaction.clear);
         return;
     }
 
@@ -95,19 +95,29 @@ export function useInteraction(colshape: alt.Colshape, type: 'vehicle' | 'player
     }
 
     const callbacks: InteractionCallback[] = [];
+    const onEnterCallbacks: InteractionCallback[] = [];
+    const onLeaveCallbacks: InteractionCallback[] = [];
     const shape = colshape;
     shape.playersOnly = false;
     shape.setMeta(SessionKey, uid);
 
-    let msgEnter = t('controller.interaction.message');
+    let msgEnter = undefined;
     let msgLeave = undefined;
 
     function handleEnter(player: alt.Player) {
         player.emit(Events.controllers.interaction.set, uid, msgEnter, colshape.pos);
+
+        for (let cb of onEnterCallbacks) {
+            cb(player, colshape, uid);
+        }
     }
 
     function handleLeave(player: alt.Player) {
         player.emit(Events.controllers.interaction.set, uid, msgLeave, colshape.pos);
+
+        for (let cb of onLeaveCallbacks) {
+            cb(player, colshape, uid);
+        }
     }
 
     function handleInteract(player: alt.Player) {
@@ -120,10 +130,37 @@ export function useInteraction(colshape: alt.Colshape, type: 'vehicle' | 'player
         }
     }
 
+    /**
+     * Called when a player presses 'E' in the interaction point
+     *
+     * @param {InteractionCallback} callback
+     */
     function on(callback: InteractionCallback) {
         callbacks.push(callback);
     }
 
+    /**
+     * Called when the player enters the interaction point
+     *
+     * @param {InteractionCallback} callback
+     */
+    function onEnter(callback: InteractionCallback) {
+        onEnterCallbacks.push(callback);
+    }
+
+    /**
+     * Called when the player leaves the interaction point
+     *
+     * @param {InteractionCallback} callback
+     */
+    function onLeave(callback: InteractionCallback) {
+        onLeaveCallbacks.push(callback);
+    }
+
+    /**
+     * Destroy the interaction point
+     *
+     */
     function destroy() {
         const index = getIndex(shape);
         if (index >= 0) {
@@ -135,6 +172,16 @@ export function useInteraction(colshape: alt.Colshape, type: 'vehicle' | 'player
         } catch (err) {}
     }
 
+    /**
+     * Add an on enter / leave message, that is passed to client-side.
+     *
+     * Message does not show automatically.
+     *
+     *
+     * @param {('enter' | 'leave')} type
+     * @param {string} msg
+     * @return
+     */
     function setMessage(type: 'enter' | 'leave', msg: string) {
         if (type === 'enter') {
             msgEnter = msg;
@@ -148,6 +195,8 @@ export function useInteraction(colshape: alt.Colshape, type: 'vehicle' | 'player
 
     return {
         on,
+        onEnter,
+        onLeave,
         destroy,
         setMessage,
         type,

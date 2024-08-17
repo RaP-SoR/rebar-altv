@@ -1,21 +1,591 @@
 ---
-order: -5
+order: 95
 ---
 
 # Changelog
+
+## Version 52
+
+### Code Changes
+
+-   Added ability to change database name through environment variables — @floydya
+-   Added door system controller — @floydya
+-   Added server config option for disabling weapon wheel menu — @mnkyarts
+-   Added onHold callback for `useKeypress` that invokes after `x` time has passed while holding a key — @koron
+-   Updated `useKeypress` to include `onHold`, which is invoked after `2s` of holding
+
+### Docs Changes
+
+-   Added door system docs @floydya
+-   Added `env` options for database name to useConfig page
+-   Updated server config docs @mnkyarts
+-   Updated `useKeypress` docs to include `onHold`
+
+---
+
+## Version 51
+
+### Code Changes
+
+-   Auto copy `nodemon-dev` and `nodemon-hot` files during script updates
+
+---
+
+## Version 50
+
+### Code Changes
+
+-   Permission system was redone by @floydya for better performance and usage
+-   Added hot reloading option for `core and webview` resources, accessible through `dev:hot`
+    -   This keeps you connected to the server while the resource itself reloads, it's quite fast
+-   Split nodemon into two configurations, added new script for reloading
+
+### Docs Changes
+
+-   Permission system was updated / documented by @floydya
+-   Documented `dev:hot` for install
+
+---
+
+## Version 49
+
+### Code Changes
+
+-   Updated Virtual Document to use a generic at the base level for the whole document
+    -   This changes how Virtual Documents are constructed, and may break some things if you use virtual documents.
+-   Added `useMessenger` to systems pathway
+-   Fix vehicle handling so it always returns streamSyncedMeta data
+-   Added `handling` to `useVehicle`
+-   Added `vehicle` to `useVehicle`, makes it so you can do `rPlayer.player.pos`
+-   Added `player` to `usePlayer`, makes it so you can do `rVehicle.vehicle.pos`
+-   Changed Rebar endpoints to use Hono, and deprecated old server utility @floydya
+
+### Docs Changes
+
+-   Restructured the documentation
+-   Documented `useCharacterEvents` and `useAccountEvents`
+-   Combined getters documentation
+-   Combined controllers documentation
+-   Combined vehicle documentation
+
+---
+
+## Version 48
+
+### Code Changes
+
+-   Updated RPC endpoints
+-   Began structuring new RPC endpoint functions
+-   Server-side instructional buttons integrated by floydya
+
+---
+
+## Version 47
+
+### Code Changes
+
+-   Added an RPC endpoint under `http://127.0.0.1:8787` with endpoints `/restart`, `/`, and `/health`.
+-   Fixed issue where reconnecting too early would cause client to be frozen on reconnecting
+-   Restarting server now kicks all players while in dev mode only
+
+---
+
+## Version 46
+
+### Code Changes
+
+-   Added `useInteractionLocal` to create local interactions for individual players
+
+### Docs Changes
+
+-   Updated `useInteraction` to include `useInteractionLocal`
+
+---
+
+## Version 45
+
+### Code Changes
+
+-   Added `useVehicleHandling` function that lets you adjust handling per vehicle
+-   Added object attachments for players, see `useAttachment` under the player endpoint
+
+### Docs Changes
+
+-   Documented `useVehicleHandling`
+-   Documented `useAttachment`
+
+---
+
+## Version 44
+
+### Code Changes
+
+-   Fixed issue with setting global document data
+-   Additionally, improved type casting support for global documents
+
+### Docs Changes
+
+-   Updated object document api to clarify generics usage
+
+---
+
+## Version 43
+
+### Code Changes
+
+-   Fixed local object initialization
+
+### Docs Changes
+
+-   N/A
+
+---
+
+## Version 42
+
+### Code Changes
+
+-   Added near perfect Torso, Top, and Undershirt data for 99% of tops
+-   Added helper functions in shared clothing script to help obtain clothing data
+-   Fixed bug where local objects were not being destroyed
+-   Fixed bug where disabled plugins were copying files
+-   Fixed bug where previous files were not cleaned up properly
+
+### Docs Changes
+
+-   N/A
+
+---
+
+## Version 41
+
+### Code Changes
+
+-   Added `useStreamSyncedBinder` to automatically synchronize document data from server to client for vehicles and characters
+-   Added `useSyncedMeta` composable to the webview, to get data synced from `useStreamSyncedBinder`
+-   Added `useStreamSyncedGetter` to client-side to get type safe responses for stream synced meta data
+
+### Docs Changes
+
+-   Documented `useStreamSyncedBinder`, `useSyncedMeta`, and `useStreamSyncedGetter`
+
+---
+
+## Version 40
+
+### Code Changes
+
+-   Added new dlc clothing maximums for 2024 DLC
+-   Added `keypress` api that lets you bind functions to keyup/keydown from server-side
+-   Added `setRpm` to vehicle API
+-   Added new `fonts` resource, which may need to be imported in your `server.toml`; for custom fonts
+-   Lower distance for all Text Labels; max distance now capped at 20
+-   Failing readiness check on an API will now return the failing API's name
+-   Added `D2D` text labels with global and local support
+
+### Docs Changes
+
+-   Documented keypress
+-   Documented keypress in vehicle api
+-   Documented fonts folder
+
+---
+
+## Version 39
+
+### Code Changes
+
+-   Potentially fixes bug where dependencies.json aren't installed outright
+-   Fixes a `hasGroupPermission` function bug
+-   Modified client side player camera with some new functions
+
+### Docs Changes
+
+-   N/A
+
+---
+
+## Version 38
+
+### Code Changes
+
+-   Added method to allow for Rebar Events to be extended via `global` declare.
+-   Added `rPlayer.sound` pathway, works the same as `rPlayer.audio`
+-   Moved images to https://github.com/Stuyk/gtav-image-archive/
+
+### Docs Changes
+
+-   Added documentation covering custom Rebar Events to the events api.
+
+---
+
+## Version 37
+
+### Code Changes
+
+-   Introduced method for clothing screeshots
+
+### Docs Changes
+
+-   N/A
+
+## Version 36
+
+### Code Changes
+
+-   Added screenshot utility for weapons
+
+### Docs Changes
+
+-   Added weapon screenshot doc
+
+---
+
+## Version 35
+
+### Code Changes
+
+-   Added screenshot utility for taking screenshot of vehicle
+
+### Docs Changes
+
+-   Documented screenshot utility
+
+---
+
+## Version 34
+
+### Code Changes
+
+-   Adds a new ambient sound to the server config
+-   Fixes an issue where subfolders were not supported for `images`, and `sounds`
+-   Added `onScreenPed` solution to show a pedestrian in the 2D space, below webview
+    -   Automatically synchronizes ped with ped reference changes, such as clothes
+    -   Thanks to BattleZone for confirming that NVE is problematic with frontend menus
+-   Added manual override for `useKeybinder` to `updateKeybindForPlayer`
+-   Fixed bug where global documents were overwriting global cache
+-   Modify `getByAccount` and `getByCharacter` to also take `numbers` for their `id` getter
+-   Change `vehicle` `getByDatabaseId` to `byId('_id');`
+
+### Docs Changes
+
+-   Modifies the server config to include `disableAmbientNoise`
+-   Added docs for `updateKeybindForPlayer`
+-   Updated vehicle getter docs
+-   Updated character getter docs
+
+---
+
+## Version 33
+
+### Code Changes
+
+-   Fixes issue where pickup sometimes doesn't spawn the object
+-   Added all clothing dlc info, and maximums to a shared data structure
+    -   Added clothing data getters to `Rebar.utility.clothing`
+    -   Added addCategory section to add custom DLC data during runtime
+
+### Docs Changes
+
+-   Added utility clothes section to server API
+
+---
+
+## Version 32
+
+### Code Changes
+
+-   Added function to attach blips to entities, because alt:V's one is broken
+-   Additionally, when a blip or the entity becomes invalid the blip is automatically destroyed.
+
+### Docs Changes
+
+-   Updated blip documentation to cover attachments
+
+---
+
+## Version 31
+
+### Code Changes
+
+-   Added `disableAttackControls`, `disableCameraControls`, and `freezeCamera` to player.world pathway
+-   Fixed issue with local progress bars not clearing
+-   Fixed issue with `gif` files not being copied correctly
+
+### Docs Changes
+
+-   Added documentation covering `player.world` new functions
+
+---
+
+## Version 30
+
+### Code Changes
+
+-   Added a `vscode transmitter` for debug mode server and client.
+    -   Allows for code to be executed from VSCode using the Rebar Transmitter
+
+### Docs Changes
+
+-   Added vscode transmitter extension page
+
+---
+
+## Version 29
+
+### Code Changes
+
+-   Custom `rmlui` get distributed to `resources/rmlui/plugins` folder
+-   Additionally `html` files act as `rmlui` and are converted into `rmlui` during the compile process
+
+### Docs Changes
+
+-   Added a section in `Plugin Structure` that covers how to work with `rmlui` correctly, and what the paths are to use the resource.
+
+---
+
+## Version 28
+
+### Code Changes
+
+-   Made interaction `setMessage` show a GTA:V notification by default when `entering`.
+-   Synchronize vehicle `customPrimaryColor`, `customSecondaryColor`, `primaryColor`, and `secondaryColor`
+-   Added `offKeyUp` to key listeners for webview composable
+-   Added `disableCriticalHits` to server configuration settings
+-   Added Rebar Event for `on-command` that lets you listen to what commands successfully executed
+-   Improve performance of player stats by making it a single event for setting stats
+-   Added `zone`, `isAiming`, and `isFlying` to player stats
+-   Fix vehicle stop server config bug, flag was incorrect
+-   Added server configs for disabling prop knockoff, cover, drivebys, and scuba gear removal
+
+### Docs Changes
+
+-   Added `onKeyUp` and `offKeyUp` to webview event composable
+-   Updated `useServerConfig` docs
+-   Updated playerStats doc
+
+---
+
+## Version 27
+
+### Code Changes
+
+-   Added `onClose` function for webview
+-   Added `escapeToClosePage` to `show` function for webviews
+    -   Keep in mind this only works for `page` types
+-   Added `RebarEvent` for page open and page close on server-side
+
+## Docs Changes
+
+-   Updated `playerUse` webview section for `show` function to include info about escape to close
+-   Added `RebarEvent` onClose and onOpen docs
+
+---
+
+## Version 26
+
+### Code Changes
+
+-   Added `useProgressbar` controller
+-   Fixed permission length bug
+-   Fixed some misnamed functions in other controllers
+-   Added `useWorldMenu` controller for building quick selection menus
+-   Fixed bug where keybinds could be invoked if certain menus were open
+
+### Docs Changes
+
+-   Added images for controllers
+-   Added `useProgressbar` doc
+-   Added `useWorldMenu` doc
+
+---
+
+## Version 25
+
+### Code Changes
+
+-   Added `account` document to `usePlayer`
+-   Fixed small permission `hasOne` error
+-   Added various shared `Utility` functions to Rebar.utility to lower import counts
+-   Added toggle controls to `usePlayer().world` to control controls state
+-   Fixed small bug where hotkeys could be invoked when game controls are disabled
+
+### Docs Changes
+
+-   Added code examples page
+-   Added troubleshooting page
+-   Updated player world api for toggling controls
+
+---
+
+## Version 24
+
+### Code Changes
+
+-   Added server configs for auto; starting engine, stopping engine, and seat swapping in vehicles
+-   Added `useKeybinder` to bind hotkeys from server-side, enabling users to call from their client
+-   Adjusted world space checker to delay by 100ms before checking, fixing colshape creation times
+
+### Docs Changes
+
+-   Updated server config doc
+-   Added `useKeybinder` page
+
+---
+
+## Version 23
+
+### Code Changes
+
+-   Added `Draggable` Component to WebView
+
+### Docs Changes
+
+-   Added `Draggable` to `webview/components` section with an example on making draggables
+-   Added `Draggable` Component to WebView
+
+### Docs Changes
+
+-   Added `Draggable` to `webview/components` section with an example on making draggables
+
+---
+
+## Version 22
+
+### Code Changes
+
+-   Added `useRateLimitCallback`
+-   Added `onEnter` and `onLeave` to interaction callbacks
+-   Added `disablePistolWhip` to `useServerConfig` that prevents pistol whipping one-hits
+
+### Docs Changes
+
+-   Created `useRateLimitCallback` docs
+-   Added `onEnter` and `onLeave` to interaction docs
+-   Added `disablePistolWhip` to `useServerConfig` docs
+
+---
+
+## Version 21
+
+-   I forgot to write the changelogs. lmao
+
+---
+
+## Version 20
+
+### Code Changes
+
+-   Made `raycast.getFocusedObject()` return `entityPos`
+-   Clearly warn users using `api.get` for obtaining an API, and recommend async instead
+-   Added new `getMeta` API for getting plugin API as single import
+-   Added `debug` option to `raycast` functions to draw lines when a raycast is invoked
+-   Added `useServerConfig` to change what HUD elements, and other on screen elements a player sees
+
+### Docs Changes
+
+-   Added `debug` to raycast docs
+-   Removed `get` from Plugin API examples, to let users focus on `async` instead
+-   Added `useServerConfig` to docs
+
+---
+
+## Version 19
+
+### Code Changes
+
+-   Added reverse map for vehicle model hash to vehicle model name
+-   Added function to add named models to list at runtime as well
+-   Added neon synchronization to vehicle document sync
+
+### Docs Changes
+
+-   Added vehicleHashes utility doc info
+
+---
+
+## Version 18
+
+### Code Changes
+
+-   Fixed a bug where closest entity and target ids matched, when they were different types
+-   Fixed passing `message` on client-side for interaction onEnter callbacks
+-   Fixed character permission issues when using protected callbacks
+-   Added group permissions for protected callbacks
+-   Added `useProxyFetch` which allows for you to register safe endpoints on server-side which can be called client-side.
+    -   This effectively allows you to make requests from the server to safely get results.
+    -   Meaning that if you have an API which only allows your server to make requests, this is a way to invoke it safely.
+-   Added `useRaycast` to get entity aimed at from client-side and return it to the server
+    -   Can obtain position looking at
+    -   Can obtain player, vehicle, or alt.Object looked at
+    -   Can obtain model & position of world object looked at
+-   Added `useVehicle` enhancements
+    -   Functions that toggled asPlayer verify ownership of keys, permission, or owner itself of the vehicle
+    -   bind
+    -   toggleDoor
+    -   toggleDoorAsPlayer
+    -   toggleEngine
+    -   toggleEngineAsPlayer
+    -   toggleLock
+    -   toggleLockAsPlayer
+    -   keys: add, remove, clear
+    -   isBound
+        -   Check if the vehicle is already bound
+    -   verifyOwner
+        -   Check if the player is an 'owner' of the vehicle
+        -   Additionally, optional section to check if they are the sole owner of the vehicle
+-   Added new controller `usePed` which creates a global pedestrian which can have synced natives invoked on it
+    -   It's recommended not to spawn more than 32 given peds around a single player.
+    -   Can even easily listen to when the specific ped spawned dies
+
+### Docs Changes
+
+-   Added `useProxyFetch` doc
+-   Added `useRaycast` doc
+-   Added `useVehicle` updates
+-   Added `usePed` controller docs
+
+---
+
+## Version 17
+
+### Code Changes
+
+-   Added `alt.getMeta('Rebar')` to get Server API with one-less import
+-   Added `alt.getMeta('RebarClient')` to get Client API with one-less import
+-   Fixed character interface not being extended correctly
+-   Added `preinstall` script to download binaries, and build codebase once
+
+### Docs Changes
+
+-   Covered alternative API import methods in docs
+
+---
+
+## Version 16
+
+### Code Changes
+
+-   Added `@Composables` path alias
+-   Added `@Plugins` path alias
+
+### Docs Changes
+
+-   Updated composables with `@Composables`
+-   Updated `what is a plugin` with information about component / composable only plugins
 
 ## Version 15
 
 ### Code Changes
 
-- Update dependencies
-- Update `_id` in database functions to use a non-deprecated ObjectId handler
-- Added `useServerWeather` function to allow setting weather and weather forecast
-  - This does not automatically sync for players, it's just a global way to set the data
+-   Update dependencies
+-   Update `_id` in database functions to use a non-deprecated ObjectId handler
+-   Added `useServerWeather` function to allow setting weather and weather forecast
+    -   This does not automatically sync for players, it's just a global way to set the data
 
 ### Docs Changes
 
-- Added `useServerWeather` docs
+-   Added `useServerWeather` docs
 
 ---
 
@@ -23,13 +593,13 @@ order: -5
 
 ### Code Changes
 
-- Added `emitServerRpc` to Webview to retrieve data from server-side using normal `alt.onRpc` events.
-  - Yes, this means you don't have to do weird event bindings to get data now.
-- Added `emitClientRpc` to Webview to retrieve data from client-side.
+-   Added `emitServerRpc` to Webview to retrieve data from server-side using normal `alt.onRpc` events.
+    -   Yes, this means you don't have to do weird event bindings to get data now.
+-   Added `emitClientRpc` to Webview to retrieve data from client-side.
 
 ### Docs Changes
 
-- Added `emitServerRpc` and `emitClientRpc` to docs
+-   Added `emitServerRpc` and `emitClientRpc` to docs
 
 ---
 
@@ -37,12 +607,12 @@ order: -5
 
 ### Code Changes
 
-- Updated `upgrade` script to prevent overwriting tailwind config, or vite config
-- Added `useLocalStorage` composable for getting / storing data
+-   Updated `upgrade` script to prevent overwriting tailwind config, or vite config
+-   Added `useLocalStorage` composable for getting / storing data
 
 ### Docs Changes
 
-- Added `useLocalStorage` composable docs
+-   Added `useLocalStorage` composable docs
 
 ---
 
@@ -50,14 +620,14 @@ order: -5
 
 ### Code Changes
 
-- Completely redid the compile pipeline
-- Improved compile times, and added docker build support to package.json scripts
-- Fixed linux based errors
+-   Completely redid the compile pipeline
+-   Improved compile times, and added docker build support to package.json scripts
+-   Fixed linux based errors
 
 ### Docs Changes
 
-- Added install instructions for Linux
-- Added install instructions for Docker
+-   Added install instructions for Linux
+-   Added install instructions for Docker
 
 ---
 
