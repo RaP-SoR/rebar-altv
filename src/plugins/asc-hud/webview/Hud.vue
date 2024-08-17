@@ -14,6 +14,11 @@
             class="absolute bottom-[70px] left-[50px] transition-all duration-500 ease-in-out"
             :health="health"
             :armour="armour"
+            :hunger="hunger"
+            :thirst="thirst"
+            :pee="pee"
+            :shower="shower"
+            :shit="shit"
             :style="getVitalityStylePosition"
         />
         <Progressbar />

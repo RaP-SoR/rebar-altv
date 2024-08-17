@@ -24,7 +24,6 @@ const selectedCommandIndex = ref(-1);
 const commandHistory = ref<string[]>([]);
 const commandHistoryIndex = ref(-1);
 
-
 function setCommands(data: CommandInfo[]) {
     commands.value = data;
 }
@@ -165,14 +164,14 @@ watch(input, onInputChange);
                 v-model="input"
                 ref="inputBox"
                 @keydown="onKeydown"
-                placeholder="Write text or /command"
+                placeholder=""
                 type="text"
                 class="min-w-[448px] max-w-[448px] rounded-lg border-2 border-neutral-50 border-opacity-20 bg-neutral-950 bg-opacity-80 px-4 py-4 font-bold tracking-wider text-white outline-none placeholder:text-neutral-500 focus:border-opacity-50"
                 :class="focused ? ['opacity-100'] : ['opacity-0']"
             />
             <template v-if="closestMatchingCommands.length >= 1 && focused">
                 <span class="select-none rounded-md bg-neutral-950 bg-opacity-60 px-2 py-2 font-medium text-white">
-                    Suggestions
+                    Meinst du:
                 </span>
                 <span
                     v-for="(command, index) in closestMatchingCommands"

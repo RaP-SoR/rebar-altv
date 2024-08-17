@@ -4,9 +4,8 @@ import { HudConfig } from '../shared/config.js';
 import './src/commands.js';
 import './src/api.js';
 
-
 HudServerConfig.init();
-
+/*
 if(HudConfig.versionAPI) {
     const VersionCheckAPI = await useApi().getAsync('ascended-versioncheck-api');
     if (VersionCheckAPI.getAPIState() === true) {
@@ -14,4 +13,4 @@ if(HudConfig.versionAPI) {
             VersionCheckAPI.checkVersion('https://github.com/ASCENDED-Team/asc-hud', 'asc-hud', 'v1.2');
         }, 250);
     }
-}
+}*/

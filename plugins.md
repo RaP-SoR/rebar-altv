@@ -22,3 +22,6 @@ AutoIncrementAPI -> https://github.com/mafineeek/rebar-autoincrement-api - Commi
 DiscordAuth -> https://github.com/unfloned/rebar-discord-auth/ - Commit c13f467
 CharacterSelect -> https://github.com/Stuyk/rebar-character-select - Commit d30c73
 CharacterCreator -> https://github.com/Stuyk/rebar-character-creator - Commit 9d6387b
+Fuel -> https://github.com/ASCENDED-Team/asc-fuel -Commit a17f5eb
+Vitality -> https://github.com/ASCENDED-Team/asc-vitality - Commit 2a92b7d
+Voice -> https://github.com/soulmate1337/rebar-voice-altv - Commit fab6177
