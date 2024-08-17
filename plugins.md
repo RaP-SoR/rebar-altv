@@ -1,3 +1,8 @@
+# External Plugins Included in Repo
+
+ItemManager -> https://github.com/Stuyk/rebar-simple-item-manager - Commit Version ad6e405 17.8.24
+Inventory -> https://github.com/ASCENDED-Team/asc-inventory-lite - Commit Version d49d916 https://github.com/ASCENDED-Team/asc-inventory-lite/commit/d49d9167922660a79e204e5e0dad1d5078b7d446
+
 # All used Plugins there are not included in this Git Repo
 
 git clone https://github.com/Stuyk/rebar-currency src/plugins/currency
