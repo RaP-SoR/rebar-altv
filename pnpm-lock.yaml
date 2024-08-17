@@ -41,6 +41,9 @@ importers:
       vue-tsc:
         specifier: ^2.0.26
         version: 2.0.26(typescript@5.5.3)
+      vuedraggable:
+        specifier: ^4.1.0
+        version: 4.1.0(vue@3.4.32(typescript@5.5.3))
     devDependencies:
       '@altv/types-client':
         specifier: ^16.2.3
@@ -1214,6 +1217,9 @@ packages:
   sjcl@1.0.8:
     resolution: {integrity: sha512-LzIjEQ0S0DpIgnxMEayM1rq9aGwGRG4OnZhCdjx7glTaJtf4zRfpg87ImfjSJjoW9vKpagd82McDOwbRT5kQKQ==}
 
+  sortablejs@1.14.0:
+    resolution: {integrity: sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==}
+
   source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
     engines: {node: '>=0.10.0'}
@@ -1377,6 +1383,11 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  vuedraggable@4.1.0:
+    resolution: {integrity: sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==}
+    peerDependencies:
+      vue: ^3.0.1
 
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
@@ -2388,6 +2399,8 @@ snapshots:
 
   sjcl@1.0.8: {}
 
+  sortablejs@1.14.0: {}
+
   source-map-js@1.2.0: {}
 
   sparse-bitfield@3.0.3:
@@ -2547,6 +2560,11 @@ snapshots:
       '@vue/shared': 3.4.32
     optionalDependencies:
       typescript: 5.5.3
+
+  vuedraggable@4.1.0(vue@3.4.32(typescript@5.5.3)):
+    dependencies:
+      sortablejs: 1.14.0
+      vue: 3.4.32(typescript@5.5.3)
 
   webidl-conversions@3.0.1: {}
 
