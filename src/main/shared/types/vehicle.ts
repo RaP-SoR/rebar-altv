@@ -18,6 +18,14 @@ export interface Vehicle {
     _id?: string;
 
     /**
+     * An easy to use identifier for the vehicle
+     *
+     * @type {number}
+     * @memberof Vehicle
+     */
+    id?: number;
+
+    /**
      * The player who is the owner of this vehicle.
      * Corresponds with character._id or null if it belongs to anything else
      * Obviously permissions and keys should be used if no owner is set.
@@ -102,6 +110,32 @@ export interface Vehicle {
      */
     windows?: { [key: string]: number };
 
+    /**
+     * Neon color for the vehicle
+     *
+     * @type {alt.RGBA}
+     * @memberof Vehicle
+     */
+    neonColor?: alt.RGBA;
+
+    /**
+     * Where the placement of the neon is
+     *
+     * @type {{
+     *         front: boolean,
+     *         back: boolean,
+     *         left: boolean,
+     *         right: boolean
+     *     }}
+     * @memberof Vehicle
+     */
+    neonPlacement?: {
+        front: boolean;
+        back: boolean;
+        left: boolean;
+        right: boolean;
+    };
+
     stateProps?: {
         /**
          * Dirt level of the vehicle
@@ -160,6 +194,54 @@ export interface Vehicle {
          */
         daylightOn?: boolean;
     };
+
+    /**
+     * Set a primary color based on GTAV colors
+     *
+     * @type {number}
+     * @memberof Vehicle
+     */
+    primaryColor?: number;
+
+    /**
+     * Set a secondary color based on GTAV colors
+     *
+     * @type {number}
+     * @memberof Vehicle
+     */
+    secondaryColor?: number;
+
+    /**
+     * The custom primary color to set on the vehicle
+     *
+     * @type {alt.RGBA}
+     * @memberof Vehicle
+     */
+    customPrimaryColor?: alt.RGBA;
+
+    /**
+     * The custom secondary color to set on the vehicle
+     *
+     * @type {alt.RGBA}
+     * @memberof Vehicle
+     */
+    customSecondaryColor?: alt.RGBA;
+
+    /**
+     * The wheel color to set on the vehicle (0-159)
+     *
+     * @type {alt.RGBA}
+     * @memberof Vehicle
+     */
+    wheelColor?: number;
+
+    /**
+     * The pearl color to set on the vehicle (0-159)
+     *
+     * @type {number}
+     * @memberof Vehicle
+     */
+    pearlColor?: number;
 
     /**
      * The number plate text for the vehicle

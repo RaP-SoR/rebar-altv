@@ -2,72 +2,55 @@ import * as alt from 'alt-client';
 import * as native from 'natives';
 import { useWebview } from '../webview/index.js';
 import { Events } from '@Shared/events/index.js';
+import { getPreviousWeatherType, getStreetInfo, getDirection, getZone } from '../utility/world/index.js';
+import { PlayerStats } from '../../shared/types/playerStats.js';
 
 const view = useWebview();
 
-const WeatherHashes = {
-    '669657108': 'BLIZZARD',
-    '916995460': 'CLEAR',
-    '1840358669': 'CLEARING',
-    '821931868': 'CLOUDS',
-    '-1750463879': 'EXTRASUNNY',
-    '-1368164796': 'FOGGY',
-    '-921030142': 'HALLOWEEN',
-    '-1148613331': 'OVERCAST',
-    '1420204096': 'RAIN',
-    '282916021': 'SMOG',
-    '603685163': 'SNOWLIGHT',
-    '-1233681761': 'THUNDER',
-    '-1429616491': 'XMAS',
-};
-
 function update() {
-    view.emit(Events.localPlayer.stats.health, alt.Player.local.health);
-    view.emit(Events.localPlayer.stats.armour, alt.Player.local.armour);
-    view.emit(Events.localPlayer.stats.weapon, alt.Player.local.currentWeapon);
-    view.emit(Events.localPlayer.stats.ammo, alt.Player.local.currentAmmo);
-    view.emit(Events.localPlayer.stats.stamina, alt.Player.local.stamina);
-    view.emit(Events.localPlayer.stats.inWater, native.isPedSwimming(alt.Player.local));
-
-    view.emit(Events.localPlayer.stats.inVehicle, alt.Player.local.vehicle ? true : false);
-    view.emit(Events.localPlayer.stats.gear, alt.Player.local.vehicle ? alt.Player.local.vehicle.gear : 0);
-    view.emit(Events.localPlayer.stats.maxGear, alt.Player.local.vehicle ? alt.Player.local.vehicle.maxGear : 0);
-    view.emit(Events.localPlayer.stats.engineOn, alt.Player.local.vehicle ? alt.Player.local.vehicle.engineOn : false);
-    view.emit(
-        Events.localPlayer.stats.indicatorLights,
-        alt.Player.local.vehicle ? alt.Player.local.vehicle.indicatorLights : 0,
-    );
-    view.emit(
-        Events.localPlayer.stats.vehicleHealth,
-        alt.Player.local.vehicle ? native.getVehicleEngineHealth(alt.Player.local.vehicle) : 0,
-    );
-    view.emit(
-        Events.localPlayer.stats.speed,
-        alt.Player.local.vehicle ? alt.Player.local.vehicle.speed : alt.Player.local.moveSpeed,
-    );
+    let lights = false;
+    let highbeams = false;
 
     if (alt.Player.local.vehicle) {
-        const [_voidLight, lights, highbeams] = native.getVehicleLightsState(alt.Player.local.vehicle);
-        view.emit(Events.localPlayer.stats.lights, [lights, highbeams]);
-    } else {
-        view.emit(Events.localPlayer.stats.lights, [false, false]);
+        const [_voidLight, _lights, _highbeams] = native.getVehicleLightsState(alt.Player.local.vehicle);
+        lights = _lights;
+        highbeams = _highbeams;
     }
 
-    view.emit(Events.localPlayer.stats.isTalking, alt.isKeyDown(alt.Voice.activationKey));
-    view.emit(Events.localPlayer.stats.fps, alt.getFps());
-    view.emit(Events.localPlayer.stats.ping, alt.getPing());
-    view.emit(Events.localPlayer.stats.time, native.getUtcTime());
-    view.emit(Events.localPlayer.stats.weather, WeatherHashes[native.getPrevWeatherTypeHashName()]);
+    const [_voidTime, year, month, day, hour, minute, second] = native.getUtcTime();
 
-    const [_, streetNameHash, crossingRoadHash] = native.getStreetNameAtCoord(
-        alt.Player.local.pos.x,
-        alt.Player.local.pos.y,
-        alt.Player.local.pos.z,
-    );
+    const stats: PlayerStats = {
+        ammo: alt.Player.local.currentAmmo,
+        armour: alt.Player.local.armour,
+        direction: getDirection(alt.Player.local),
+        engineOn: alt.Player.local.vehicle ? alt.Player.local.vehicle.engineOn : false,
+        fps: alt.getFps(),
+        gear: alt.Player.local.vehicle ? alt.Player.local.vehicle.gear : 0,
+        health: alt.Player.local.health,
+        indicatorLights: alt.Player.local.vehicle ? alt.Player.local.vehicle.indicatorLights : 0,
+        inVehicle: alt.Player.local.vehicle ? true : false,
+        inWater: native.isPedSwimming(alt.Player.local),
+        isAiming: native.isControlPressed(0, 25) && native.isPedArmed(alt.Player.local, 6),
+        isMetric: native.shouldUseMetricMeasurements(),
+        isFlying: native.isPedInFlyingVehicle(alt.Player.local),
+        isTalking: alt.isKeyDown(alt.Voice.activationKey),
+        lights: [lights, highbeams],
+        locked: alt.Player.local.vehicle ? alt.Player.local.vehicle.lockState === 2 : false,
+        maxGear: alt.Player.local.vehicle ? alt.Player.local.vehicle.maxGear : 0,
+        ping: alt.getPing(),
+        seat: alt.Player.local.vehicle ? alt.Player.local.seat : 0,
+        speed: alt.Player.local.vehicle ? native.getEntitySpeed(alt.Player.local.vehicle) : alt.Player.local.moveSpeed,
+        stamina: alt.Player.local.stamina,
+        street: getStreetInfo(alt.Player.local.pos),
+        time: { hour, minute, second },
+        vehicleClass: alt.Player.local.vehicle ? native.getVehicleClass(alt.Player.local.vehicle) : -1,
+        vehicleHealth: alt.Player.local.vehicle ? native.getVehicleEngineHealth(alt.Player.local.vehicle) : 0,
+        weapon: alt.Player.local.currentWeapon,
+        weather: getPreviousWeatherType(),
+        zone: getZone(alt.Player.local.pos),
+    };
 
-    const streetName = native.getStreetNameFromHashKey(streetNameHash);
-    const crossingRoad = native.getStreetNameFromHashKey(crossingRoadHash);
-    view.emit(Events.localPlayer.stats.street, [streetName, crossingRoad]);
+    view.emit(Events.localPlayer.stats.set, stats);
 }
 
 alt.setInterval(update, 50);
