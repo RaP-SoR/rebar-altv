@@ -2,6 +2,8 @@
 
 ItemManager -> https://github.com/Stuyk/rebar-simple-item-manager - Commit Version ad6e405 17.8.24
 Inventory -> https://github.com/ASCENDED-Team/asc-inventory-lite - Commit Version d49d916 https://github.com/ASCENDED-Team/asc-inventory-lite/commit/d49d9167922660a79e204e5e0dad1d5078b7d446
+HUD -> https://github.com/ASCENDED-Team/asc-hud/releases/tag/v1.2 - V1.2
+Notifys -> https://github.com/ASCENDED-Team/asc-notifications/commit/05d253a6e46711ed2e1bf29398d214417e4c63f4
 
 # All used Plugins there are not included in this Git Repo
 
