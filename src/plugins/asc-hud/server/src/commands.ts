@@ -5,7 +5,6 @@ import { HUDEvents } from '../../shared/src/events.js';
 const Rebar = useRebar();
 const messenger = Rebar.messenger.useMessenger();
 const HudAPI = await Rebar.useApi().getAsync('ascended-hud-api');
-
 messenger.commands.register({
     name: '/seatbelt',
     desc: 'Toggle your seatbelt on or off.',
@@ -23,7 +22,7 @@ messenger.commands.register({
         if (!time) {
             time = 1000 * 10; // 10 Seconds
         }
-        
+
         HudAPI.createProgressBar(player, time, bgColor, progressColor, textColor, testFunctionForCallbackProgress);
     },
 });

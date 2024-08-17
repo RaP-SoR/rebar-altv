@@ -1,3 +1,4 @@
+import { VitalityConfig } from './../../asc-vitality/shared/config';
 import { useApi } from '@Server/api/index.js';
 import { HudServerConfig } from './src/serverConfig.js';
 import { HudConfig } from '../shared/config.js';

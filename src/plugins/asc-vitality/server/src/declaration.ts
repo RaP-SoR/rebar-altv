@@ -5,6 +5,7 @@ declare module '@Shared/types/character.js' {
             thirst: number;
             pee: number;
             shower: number;
+            shit: number;
         };
     }
 }

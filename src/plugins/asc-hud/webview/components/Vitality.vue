@@ -18,6 +18,7 @@ import Thirst from './vitals/thirst.vue';
 import Pee from './vitals/pee.vue';
 import Shower from './vitals/shower.vue';
 import Shit from './vitals/shit.vue';
+
 const { health, armour, hunger, thirst, pee, shower, shit } = defineProps([
     'health',
     'armour',

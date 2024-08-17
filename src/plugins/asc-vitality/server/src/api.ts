@@ -17,6 +17,9 @@ export function useVitalityAPI() {
                 ascendedVitality: {
                     hunger: 100,
                     thirst: 100,
+                    pee: 100,
+                    shower: 100,
+                    shit: 100,
                 },
             });
 
@@ -35,10 +38,19 @@ export function useVitalityAPI() {
             const vitalityData = getVitalityData(player);
 
             if (vitalityData) {
-                const newHunger = Math.max(0, vitalityData.hunger - VitalityConfig.hungerDecreaseRate);
-                const newThirst = Math.max(0, vitalityData.thirst - VitalityConfig.thirstDecreaseRate);
+                const newHunger = parseFloat(
+                    Math.max(0, vitalityData.hunger - VitalityConfig.hungerDecreaseRate).toFixed(2),
+                );
+                const newThirst = parseFloat(
+                    Math.max(0, vitalityData.thirst - VitalityConfig.thirstDecreaseRate).toFixed(2),
+                );
+                const newPee = parseFloat(Math.max(0, vitalityData.pee - VitalityConfig.peeDecreaseRate).toFixed(2));
+                const newShower = parseFloat(
+                    Math.max(0, vitalityData.shower - VitalityConfig.showerDecreaseRate).toFixed(2),
+                );
+                const newShit = parseFloat(Math.max(0, vitalityData.shit - VitalityConfig.shitDecreaseRate).toFixed(2));
 
-                updateVitalityRates(player, parseFloat(newHunger.toFixed(2)), parseFloat(newThirst.toFixed(2)));
+                updateVitalityRates(player, vitalityData);
 
                 if (newHunger === 0) {
                     clearInterval(decreaseInterval);
@@ -52,16 +64,13 @@ export function useVitalityAPI() {
         }, VitalityConfig.updateInterval);
     }
 
-    function updateVitalityRates(player: alt.Player, hunger: number, thirst: number) {
+    function updateVitalityRates(player: alt.Player, vitalityData: Object) {
         if (!player?.valid) return;
 
         const rebarPlayer = Rebar.document.character.useCharacter(player);
 
         rebarPlayer.setBulk({
-            ascendedVitality: {
-                hunger: hunger,
-                thirst: thirst,
-            },
+            ascendedVitality: vitalityData,
         });
     }
 

@@ -4,5 +4,8 @@ export const VitalityConfig = {
 
     hungerDecreaseRate: 0.05,
     thirstDecreaseRate: 0.07,
-    updateInterval: 10000,
+    peeDecreaseRate: 0.05,
+    showerDecreaseRate: 0.05,
+    shitDecreaseRate: 0.05,
+    updateInterval: 1000,
 };
