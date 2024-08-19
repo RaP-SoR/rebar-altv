@@ -1,3 +1,6 @@
+./data/*.bin
+data/*.bin
+*.bin
 .server-crashes-cache/
 cache/
 ./data/
@@ -61,5 +64,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-data/*.bin
-*.bin
