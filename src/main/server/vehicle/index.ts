@@ -1,12 +1,14 @@
 import * as alt from 'alt-server';
-import { useRebar } from '../index.js';
 import { Vehicle, WheelState } from '../../shared/types/vehicle.js';
 import * as Utility from '@Shared/utility/index.js';
 import { Events } from '../../shared/events/index.js';
 import { useVehicleHandling } from './vehicleHandling.js';
+import { useDatabase } from '../database/index.js';
+import { useVehicleBinder, useVehicle as useVehicleDocument } from '../document/vehicle.js';
+import { CollectionNames } from '../document/shared.js';
+import { usePlayer } from '../player/index.js';
 
-const Rebar = useRebar();
-const db = Rebar.database.useDatabase();
+const db = useDatabase();
 
 export function useVehicle(vehicle: alt.Vehicle) {
     /**
@@ -58,39 +60,21 @@ export function useVehicle(vehicle: alt.Vehicle) {
         }
 
         // Synchronize neon
-        if (document.neonPlacement && document.neonColor) {
-            vehicle.neon = document.neonPlacement;
-            vehicle.neonColor = document.neonColor;
+        if (document.neon && document.neon.color) {
+            vehicle.neon = document.neon.placement;
+            vehicle.neonColor = document.neon.color;
         }
 
-        // Synchronize primary custom paint job
-        if (typeof document.customPrimaryColor !== 'undefined') {
-            vehicle.customPrimaryColor = document.customPrimaryColor;
-        }
 
-        // Synchronize secondary custom paint job
-        if (typeof document.customSecondaryColor !== 'undefined') {
-            vehicle.customSecondaryColor = document.customSecondaryColor;
-        }
-
-        // Synchronize primary paint job
-        if (typeof document.primaryColor !== 'undefined') {
-            vehicle.primaryColor = document.primaryColor;
-        }
-
-        // Synchronize secondary paint job
-        if (typeof document.secondaryColor !== 'undefined') {
-            vehicle.secondaryColor = document.secondaryColor;
-        }
-
-        // Synchronize wheelColor
-        if (typeof document.wheelColor !== 'undefined') {
-            vehicle.wheelColor = document.wheelColor;
-        }
-
-        // Synchronize pearlColor
-        if (typeof document.pearlColor !== 'undefined') {
-            vehicle.pearlColor = document.pearlColor;
+        // Synchronize Colors
+        if (document.color) {
+            vehicle.customPrimaryColor = document.color.primaryCustom ?? new alt.RGBA(255, 255, 255, 255);
+            vehicle.customSecondaryColor = document.color.secondaryCustom ?? new alt.RGBA(255, 255, 255, 255);
+            vehicle.primaryColor = document.color.primary ?? 0;
+            vehicle.secondaryColor = document.color.secondary ?? 0;
+            vehicle.wheelColor = document.color.wheel ?? 0;
+            vehicle.pearlColor = document.color.pearl ?? 0;
+            vehicle.headlightColor = document.color.xenon ?? 0;
         }
 
         // Synchronize vehicle extras
@@ -139,7 +123,7 @@ export function useVehicle(vehicle: alt.Vehicle) {
             return undefined;
         }
 
-        const document = Rebar.document.vehicle.useVehicle(vehicle);
+        const document = useVehicleDocument(vehicle);
         if (document.get()) {
             return undefined;
         }
@@ -153,11 +137,11 @@ export function useVehicle(vehicle: alt.Vehicle) {
                 pos: vehicle.pos,
                 rot: vehicle.rot,
             },
-            Rebar.database.CollectionNames.Vehicles,
+            CollectionNames.Vehicles,
         );
 
-        const vehicleDocument = await db.get<Vehicle>({ _id: id }, Rebar.database.CollectionNames.Vehicles);
-        Rebar.document.vehicle.useVehicleBinder(vehicle).bind(vehicleDocument);
+        const vehicleDocument = await db.get<Vehicle>({ _id: id }, CollectionNames.Vehicles);
+        useVehicleBinder(vehicle).bind(vehicleDocument);
         return vehicleDocument;
     }
 
@@ -173,11 +157,11 @@ export function useVehicle(vehicle: alt.Vehicle) {
             return false;
         }
 
-        if (Rebar.document.vehicle.useVehicle(vehicle).get()) {
+        if (useVehicleDocument(vehicle).get()) {
             return false;
         }
 
-        Rebar.document.vehicle.useVehicleBinder(vehicle).bind(document);
+        useVehicleBinder(vehicle).bind(document);
         return true;
     }
 
@@ -187,7 +171,7 @@ export function useVehicle(vehicle: alt.Vehicle) {
      * @return
      */
     function isBound() {
-        return Rebar.document.vehicle.useVehicle(vehicle).get() ? true : false;
+        return useVehicleDocument(vehicle).get() ? true : false;
     }
 
     /**
@@ -197,7 +181,7 @@ export function useVehicle(vehicle: alt.Vehicle) {
      * @return
      */
     async function repair(): Promise<alt.Vehicle> {
-        const document = Rebar.document.vehicle.useVehicle(vehicle);
+        const document = useVehicleDocument(vehicle);
         const model = vehicle.model;
         const pos = vehicle.pos;
         const rot = vehicle.rot;
@@ -212,7 +196,7 @@ export function useVehicle(vehicle: alt.Vehicle) {
             return vehicle;
         }
 
-        Rebar.document.vehicle.useVehicleBinder(vehicle).bind(document.get(), false);
+        useVehicleBinder(vehicle).bind(document.get(), false);
         await save();
         sync();
 
@@ -225,7 +209,7 @@ export function useVehicle(vehicle: alt.Vehicle) {
      * @return
      */
     function save() {
-        const document = Rebar.document.vehicle.useVehicle(vehicle);
+        const document = useVehicleDocument(vehicle);
         if (!document.get()) {
             return;
         }
@@ -285,7 +269,7 @@ export function useVehicle(vehicle: alt.Vehicle) {
      * @return
      */
     function hasOwner() {
-        const document = Rebar.document.vehicle.useVehicle(vehicle);
+        const document = useVehicleDocument(vehicle);
         return document.get() ? true : false;
     }
 
@@ -302,7 +286,12 @@ export function useVehicle(vehicle: alt.Vehicle) {
      * @param {number} door
      */
     function toggleDoor(door: number) {
-        vehicle.setDoorState(door, vehicle.getDoorState(door) === 0 ? 7 : 0);
+        if (door < 0 || door > 5) {
+            throw new Error('Toggle door values must be 0 - 5');
+        }
+
+        const state = vehicle.getStreamSyncedMeta(`door-${door}`) ? false : true;
+        vehicle.setStreamSyncedMeta(`door-${door}`, state);
     }
 
     /**
@@ -371,7 +360,7 @@ export function useVehicle(vehicle: alt.Vehicle) {
      * @return
      */
     async function addKey(owner_document_id: string) {
-        const document = Rebar.document.vehicle.useVehicle(vehicle);
+        const document = useVehicleDocument(vehicle);
         if (!document.get()) {
             return false;
         }
@@ -394,7 +383,7 @@ export function useVehicle(vehicle: alt.Vehicle) {
      * @return
      */
     async function removeKey(owner_document_id: string) {
-        const document = Rebar.document.vehicle.useVehicle(vehicle);
+        const document = useVehicleDocument(vehicle);
         if (!document.get()) {
             return false;
         }
@@ -416,7 +405,7 @@ export function useVehicle(vehicle: alt.Vehicle) {
      * @return
      */
     async function clearKeys() {
-        const document = Rebar.document.vehicle.useVehicle(vehicle);
+        const document = useVehicleDocument(vehicle);
         if (!document.get()) {
             return false;
         }
@@ -435,12 +424,12 @@ export function useVehicle(vehicle: alt.Vehicle) {
      * @param {alt.Player} player
      */
     function verifyOwner(player: alt.Player, requireOwnership: boolean, ownerOnly = false) {
-        const document = Rebar.document.vehicle.useVehicle(vehicle);
+        const document = useVehicleDocument(vehicle);
         if (!document.get()) {
             return requireOwnership ? false : true;
         }
 
-        const rPlayer = Rebar.usePlayer(player);
+        const rPlayer = usePlayer(player);
         const _id = rPlayer.character.getField('_id');
         if (!_id) {
             return false;
@@ -479,7 +468,7 @@ export function useVehicle(vehicle: alt.Vehicle) {
      * If the vehicle has a `document` bound to it, it will apply the appearance.
      */
     function sync() {
-        const document = Rebar.document.vehicle.useVehicle(vehicle);
+        const document = useVehicleDocument(vehicle);
         if (!document.get()) {
             return;
         }
