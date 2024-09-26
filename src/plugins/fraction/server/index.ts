@@ -20,7 +20,11 @@ const faction: IFaction = {
     factionId: 6,
     active: true,
     type: FactionType.Civilian,
-    rankNames: ['DieDünne', 'DieDicke', 'Mannsweib'],
+    rankNames: [
+        { rank: 1, name: 'DieDünne' },
+        { rank: 2, name: 'DieDicke' },
+        { rank: 3, name: 'Mannsweib' },
+    ],
     members: [{ name: 'Mav', id: 'e142dsggws5212' }],
     pos: {
         spawn: new Vector3(0, 0, 0),
@@ -36,3 +40,5 @@ const faction: IFaction = {
 };
 
 factionAPI.addFaction(faction);
+
+alt.Vehicle(alt.hash('adder'), 0, 0, 0, 0, 0, 0, 0).then((vehicle) => {
