@@ -1,0 +1,65 @@
+[
+    {
+        "id": 1,
+        "name": "Settings",
+        "image": "./images/app-settings.png",
+        "allowBagde": true,
+        "permissions": [{}],
+        "active": true,
+        "dev": true
+    },
+    {
+        "id": 2,
+        "name": "Rechner",
+        "image": "./images/app-calc.png",
+        "allowBagde": true,
+        "permissions": [{}],
+        "active": true,
+        "dev": true
+    },
+    {
+        "id": 3,
+        "name": "Kamara",
+        "image": "./images/app-camera.png",
+        "allowBagde": true,
+        "permissions": [{}],
+        "active": true,
+        "dev": true
+    },
+    {
+        "id": 4,
+        "name": "Kontakte",
+        "image": "./images/app-contacts.png",
+        "allowBagde": true,
+        "permissions": [{}],
+        "active": true,
+        "dev": true
+    },
+    {
+        "id": 5,
+        "name": "Telefon",
+        "image": "./images/app-call.png",
+        "allowBagde": true,
+        "permissions": [{}],
+        "active": true,
+        "dev": true
+    },
+    {
+        "id": 6,
+        "name": "Karten",
+        "image": "./images/app-maps.png",
+        "allowBagde": true,
+        "permissions": [{}],
+        "active": true,
+        "dev": true
+    },
+    {
+        "id": 7,
+        "name": "Notizen",
+        "image": "./images/app-notes.png",
+        "allowBagde": true,
+        "permissions": [{}],
+        "active": true,
+        "dev": true
+    }
+]
