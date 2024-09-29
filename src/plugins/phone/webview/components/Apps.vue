@@ -1,7 +1,14 @@
 <template>
     <div class="apppage-container" style="background-image: url('../images/bg-default.jpg')">
         <div class="app-container">
-            <AppItem v-for="app in apps" :key="app.id" :name="app.name" :image="app.image" :badge="2" />
+            <AppItem
+                @click="navigateToApp(app.name)"
+                v-for="app in apps"
+                :key="app.id"
+                :name="app.name"
+                :image="app.image"
+                :badge="2"
+            />
         </div>
     </div>
 </template>
@@ -10,11 +17,19 @@
 import AppItem from './AppItem.vue';
 import { defineProps, ref, onMounted } from 'vue';
 import appsData from '../apps.json';
-
+import { useRouter } from 'vue-router';
+import Settings from './apps/Settings.vue';
 const apps = ref([]);
 
+const router = useRouter();
+
+const navigateToApp = (name) => {
+    router.push({ path: `/apps/${name}` });
+    console.log('Navigating to app:', name);
+};
 onMounted(() => {
     apps.value = appsData;
+    router.addRoute('settting', { path: '/apps/Settings', component: Settings });
 });
 
 const props = defineProps({

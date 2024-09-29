@@ -27,6 +27,7 @@ import '@quasar/extras/line-awesome/line-awesome.css';
 import '@quasar/extras/bootstrap-icons/bootstrap-icons.css';
 // Import Quasar css
 import 'quasar/src/css/index.sass';
+import { createMemoryHistory, createRouter } from 'vue-router';
 
 const { init } = usePages();
 
@@ -44,7 +45,23 @@ app.use(Quasar, {
     plugins: {},
     iconSet: quasarIconSet,
 });
+import AppDetail from './App.vue'; // Pfad zu deiner AppDetail-Komponente
 
+const routes = [
+    {
+        path: '/apps/:name',
+        name: 'AppDetail',
+        component: AppDetail,
+    },
+    // andere Routen
+];
+const router = createRouter({
+    history: createMemoryHistory(),
+    routes: routes,
+});
+export default router;
+
+app.use(router);
 app.component('Draggable', DraggableVue);
 app.mount('#app');
 init();

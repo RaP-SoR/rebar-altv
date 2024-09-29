@@ -8,7 +8,7 @@
     </div>
 </template>
 <script setup>
-import { computed, defineProps } from 'vue';
+import { defineProps } from 'vue';
 import { QBadge } from 'quasar';
 const appClicked = (name) => {
     console.log('App clicked :', name);

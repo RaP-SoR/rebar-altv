@@ -70,7 +70,7 @@ export default defineComponent({
         },
         battery: {
             type: Number,
-            default: 50,
+            default: 10,
         },
         wifi: {
             type: Boolean,
